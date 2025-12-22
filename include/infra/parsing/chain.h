@@ -1,8 +1,10 @@
 
 #pragma once
+
+#include "parser.h"
+#include "infra/util/char_stream.h"
 #include <initializer_list>
 #include <algorithm>
-#include "parser.h"
 
 template<typename T>
 ParseResult<T> chain_left(
@@ -12,13 +14,16 @@ ParseResult<T> chain_left(
     std::initializer_list<char> ops
 ) {
     auto left = operand(s);
-    char op = *left.next;
+    while (true) {
+        const char* p = skip_ws(left.next);
+        char op = *p;
 
-    while (std::find(ops.begin(), ops.end(), op) != ops.end()) {
-        auto right = operand(left.next + 1);
+        if (std::find(ops.begin(), ops.end(), op) == ops.end()) {
+            break;
+        }
+        auto right = operand(p + 1);
         T value = apply(op, left.value, right.value);
         left = { value, right.next };
-        op = *left.next;
     }
     return left;
 }
