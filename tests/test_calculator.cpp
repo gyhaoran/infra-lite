@@ -8,5 +8,6 @@ int main() {
     TEST_CHECK(eval("(1+2)*3") == 9);
     TEST_CHECK(eval("-3+5") == 2);
     TEST_CHECK(eval("1 + 2 * (3 + 4)") == 15);
+    TEST_CHECK(eval("2^3^2") == 512);
     return test::summary();
 }

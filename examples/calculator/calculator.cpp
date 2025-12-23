@@ -2,17 +2,32 @@
 #include "infra/parsing/chain.h"
 #include "infra/util/char_stream.h"
 #include <cstdio>
+#include <cmath>
 
 ParseResult<int> parse_add_sub(const char*);
 
 int apply_op(char op, int l, int r) {
     switch (op) {
-        case '+': return l + r;
-        case '-': return l - r;
-        case '*': return l * r;
-        case '/': return l / r;
+        case '+': { return l + r; }
+        case '-': { return l - r; }
+        case '*': { return l * r; }
+        case '/': {
+            if (r == 0) {
+                std::fprintf(stderr, "Runtime error: division by zero\n");
+                std::exit(1);
+            }
+            return l / r;
+        }
     }
     return 0;
+}
+
+int apply_power(int base, int exp) {
+    if (exp < 0) {
+        std::fprintf(stderr, "Runtime error: negative exponent\n");
+        std::exit(1);
+    }
+    return static_cast<int>(std::pow(base, exp));
 }
 
 ParseResult<int> parse_number(const char* s) {
@@ -66,8 +81,12 @@ ParseResult<int> parse_unary(const char* s) {
     return parse_group(s);
 }
 
+ParseResult<int> parse_power(const char* s) {
+    return chain_right<int>(s, parse_unary, apply_power, {'^'});
+}
+
 ParseResult<int> parse_mul_div(const char* s) {
-    return chain_left<int>(s, parse_unary, apply_op, {'*', '/'});
+    return chain_left<int>(s, parse_power, apply_op, {'*', '/'});
 }
 
 ParseResult<int> parse_add_sub(const char* s) {
