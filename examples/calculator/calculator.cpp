@@ -17,25 +17,52 @@ int apply_op(char op, int l, int r) {
 
 ParseResult<int> parse_number(const char* s) {
     s = skip_ws(s);
-    int v, len;
-    sscanf(s, "%d%n", &v, &len);
-    return {v, s + len};
+
+    int v = 0;
+    int len = 0;
+    int matched = sscanf(s, "%d%n", &v, &len);
+
+    if (matched != 1) {
+        return ParseResult<int>::error_at(s, ParseError::UnexpectedChar);
+    }
+
+    return { v, s + len, ParseError::None };
 }
 
 ParseResult<int> parse_group(const char* s) {
     s = skip_ws(s);
+
     if (*s == '(') {
         auto inner = parse_add_sub(s + 1);
-        return {inner.value, inner.next + 1};
+        if (!inner.ok()) {
+            return inner;
+        }
+
+        const char* p = skip_ws(inner.next);
+        if (*p != ')') {
+            return ParseResult<int>::error_at(p, ParseError::UnexpectedChar);
+        }
+
+        return { inner.value, p + 1, ParseError::None };
     }
+
     return parse_number(s);
 }
 
 ParseResult<int> parse_unary(const char* s) {
+    s = skip_ws(s);
+
     if (*s == '+' || *s == '-') {
         auto inner = parse_unary(s + 1);
-        return (*s == '+') ? inner : ParseResult<int>{-inner.value, inner.next};
+        if (!inner.ok()) {
+            return inner;
+        }
+
+        return (*s == '+')
+            ? inner
+            : ParseResult<int>{ -inner.value, inner.next, ParseError::None };
     }
+
     return parse_group(s);
 }
 

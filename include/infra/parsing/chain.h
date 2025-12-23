@@ -1,4 +1,3 @@
-
 #pragma once
 
 #include "parser.h"
@@ -14,6 +13,10 @@ ParseResult<T> chain_left(
     std::initializer_list<char> ops
 ) {
     auto left = operand(s);
+    if (!left.ok()) {
+        return left;
+    }
+
     while (true) {
         const char* p = skip_ws(left.next);
         char op = *p;
@@ -21,9 +24,16 @@ ParseResult<T> chain_left(
         if (std::find(ops.begin(), ops.end(), op) == ops.end()) {
             break;
         }
+
         auto right = operand(p + 1);
+        if (!right.ok()) {
+            return right;
+        }
+
         T value = apply(op, left.value, right.value);
-        left = { value, right.next };
+        left = { value, right.next, ParseError::None };
     }
+
     return left;
 }
+
