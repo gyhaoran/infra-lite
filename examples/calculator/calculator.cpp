@@ -54,11 +54,9 @@ ParseResult<int> parse_group(const char* s) {
         }
 
         const char* p = skip_ws(inner.next);
-        if (*p != ')') {
-            return ParseResult<int>::error_at(p, ParseError::UnexpectedChar);
-        }
-
-        return { inner.value, p + 1, ParseError::None };
+        auto r = expect_char(p, ')');
+        if (!r.ok()) return { 0, r.next, r.error };
+        return { inner.value, r.next, ParseError::None };
     }
 
     return parse_number(s);
