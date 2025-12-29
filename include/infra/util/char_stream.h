@@ -2,6 +2,9 @@
 
 #include "infra/parsing/result.h"
 
+using infra::parsing::ParseResult;
+
+namespace infra::util {
 
 inline const char* skip_ws(const char* s) {
     while (*s == ' ' || *s == '\t' || *s == '\n') {
@@ -15,8 +18,10 @@ inline const char* skip_ws(const char* s) {
 // On failure: returns ParseResult with error == UnexpectedChar, next == s
 inline ParseResult<char> expect_char(const char* s, char expected) {
     if (*s == expected) {
-        return { expected, s + 1, ParseError::None };
+        return { expected, s + 1, infra::parsing::ParseError::None };
     } else {
-        return ParseResult<char>::error_at(s, ParseError::UnexpectedChar);
+        return ParseResult<char>::error_at(s, infra::parsing::ParseError::UnexpectedChar);
     }
 }
+
+} // namespace infra::util

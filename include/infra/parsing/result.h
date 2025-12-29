@@ -1,5 +1,7 @@
 #pragma once
 
+namespace infra::parsing {
+
 enum class ParseError {
     None,
     UnexpectedChar,
@@ -21,3 +23,5 @@ struct ParseResult {
         return r;
     }
 };
+
+} // namespace infra::parsing

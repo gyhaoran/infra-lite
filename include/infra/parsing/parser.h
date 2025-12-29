@@ -6,5 +6,9 @@
 #pragma once
 #include "result.h"
 
+namespace infra::parsing {
+
 template<typename T>
 using Parser = ParseResult<T>(*)(const char*);
+
+} // namespace infra::parsing

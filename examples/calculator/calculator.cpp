@@ -4,6 +4,10 @@
 #include <cstdio>
 #include <cmath>
 
+using namespace infra::parsing;
+using infra::util::skip_ws;
+using infra::util::expect_char;
+
 ParseResult<int> parse_add_sub(const char*);
 
 int apply_op(char op, int l, int r) {
@@ -54,9 +58,11 @@ ParseResult<int> parse_group(const char* s) {
         }
 
         const char* p = skip_ws(inner.next);
-        auto r = expect_char(p, ')');
-        if (!r.ok()) return { 0, r.next, r.error };
-        return { inner.value, r.next, ParseError::None };
+        auto close = expect_char(p, ')');
+        if (!close.ok()) { 
+            return ParseResult<int>::error_at(close.next, close.error);
+        }
+        return { inner.value, close.next, ParseError::None };
     }
 
     return parse_number(s);

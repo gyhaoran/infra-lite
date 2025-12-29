@@ -5,6 +5,10 @@
 #include <initializer_list>
 #include <algorithm>
 
+using infra::util::skip_ws;
+
+namespace infra::parsing {
+
 template<typename T>
 ParseResult<T> chain_left(
     const char* s,
@@ -64,3 +68,5 @@ ParseResult<T> chain_right(
     T value = apply(left.value, right.value);
     return { value, right.next, ParseError::None };
 }
+
+} // namespace infra::parsing
