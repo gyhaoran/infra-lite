@@ -2,8 +2,7 @@
 #include <cstdio>
 
 int main() {
-    const char* text =
-        "timeout = 30\n"
+    const char* text = "timeout = 30\n"
         "retry = 3\n"
         "debug\n";
 

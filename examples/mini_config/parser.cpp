@@ -8,7 +8,7 @@
 using namespace infra::parsing;
 using infra::util::skip_ws;
 
-ParseResult<std::string> parse_ident(const char* s) {
+ParseResult<std::string> parse_identifier(const char* s) {
     s = skip_ws(s);
 
     const char* p = s;
@@ -35,22 +35,29 @@ ParseResult<int> parse_number(const char* s) {
     return { v, s + len, ParseError::None };
 }
 
+inline ParseResult<char> parse_char(const char* s, char expected) {
+    if (*s == '\0') {
+        return ParseResult<char>::error_at(s, ParseError::UnexpectedEnd);
+    }
+    if (*s != expected) {
+        return ParseResult<char>::error_at(s, ParseError::UnexpectedChar);
+    }
+    return { expected, s + 1, ParseError::None };
+}
+
+
 ParseResult<ConfigItem> parse_stmt(const char* s) {
-    auto key = parse_ident(s);
+    auto key = parse_identifier(s);
     if (!key.ok()) {
         return ParseResult<ConfigItem>::error_at(key.next, key.error);
     }
 
-    auto eq = optional<char>(key.next, [](const char* p) {
-        p = skip_ws(p);
-        if (*p == '=') {
-            return ParseResult<char>{ '=', p + 1, ParseError::None };
-        }
-        return ParseResult<char>::error_at(p, ParseError::UnexpectedChar);
+    auto eq = optional<char>(key.next, [](const char* s) { 
+        s = skip_ws(s); 
+        return parse_char(s, '='); 
     });
 
-    ConfigItem item;
-    item.key = key.value;
+    ConfigItem item{.key = key.value};
 
     if (eq.next != key.next) {
         auto val = parse_number(eq.next);
