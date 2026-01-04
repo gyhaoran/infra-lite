@@ -62,16 +62,3 @@ ctest
 ## License
 
 MIT
-
-- 运算函数
-```c
-int apply_op(char op, int l, int r) {
-    switch (op) {
-        case '+': return l + r;
-        case '-': return l - r;
-        case '*': return l * r;
-        case '/': return l / r;
-    }
-    return 0;
-}
-```

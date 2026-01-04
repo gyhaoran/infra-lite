@@ -1,12 +1,11 @@
 #include "calculator.h"
 #include "infra/parsing/chain.h"
-#include "infra/util/char_stream.h"
+#include "infra/parsing/primitives.h"
 #include <cstdio>
 #include <cmath>
 
 using namespace infra::parsing;
 using infra::util::skip_ws;
-using infra::util::expect_char;
 
 ParseResult<int> parse_add_sub(const char*);
 
@@ -58,7 +57,7 @@ ParseResult<int> parse_group(const char* s) {
         }
 
         const char* p = skip_ws(inner.next);
-        auto close = expect_char(p, ')');
+        auto close = char_p(p, ')');
         if (!close.ok()) { 
             return ParseResult<int>::error_at(close.next, close.error);
         }
