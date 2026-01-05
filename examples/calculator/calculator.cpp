@@ -57,7 +57,7 @@ ParseResult<int> parse_group(const char* s) {
         }
 
         const char* p = skip_ws(inner.next);
-        auto close = char_p(p, ')');
+        auto close = expect_char(p, ')');
         if (!close.ok()) { 
             return ParseResult<int>::error_at(close.next, close.error);
         }

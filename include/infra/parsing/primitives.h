@@ -3,7 +3,7 @@
 
 namespace infra::parsing {
 
-inline ParseResult<char> char_p(const char* s, char expected) {
+inline ParseResult<char> expect_char(const char* s, char expected) {
     if (*s == '\0') {
         return ParseResult<char>::error_at(s, ParseError::UnexpectedEnd);
     }
