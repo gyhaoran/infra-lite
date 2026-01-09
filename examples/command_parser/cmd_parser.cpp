@@ -108,12 +108,9 @@ ParseResult<Arg> parse_arg(const char* s) {
     }
 
     // try identifier
-    auto ident = parse_ident(s);
+    auto ident = parse_ident_arg(s);
     if (ident.ok()) {
-        Arg arg;
-        arg.kind = Arg::Kind::Ident;
-        arg.key = ident.value;
-        return { arg, ident.next, ParseError::None };
+        return ident;
     }
 
     return ParseResult<Arg>::error_at(s, ParseError::UnexpectedChar);
@@ -128,7 +125,7 @@ ParseResult<Command> parse_command(const char* s) {
 
     const char* p = name.next;
 
-    while (true) {
+    while (p && *p != '\0') {
         auto arg = optional(p, parse_arg);
         if (!arg.ok()) {
             break;

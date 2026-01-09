@@ -2,8 +2,7 @@
 #include <cstdio>
 
 int main() {
-    const char* input =
-        "run job1 --force timeout=30";
+    const char* input = "run job1 --force timeout=30";
 
     auto r = parse_command(input);
     if (!r.ok()) {
