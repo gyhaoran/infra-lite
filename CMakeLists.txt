@@ -48,3 +48,7 @@ add_test(NAME string_utils_tests COMMAND test_string_utils)
 add_executable(test_error tests/test_error.cpp)
 target_link_libraries(test_error infra-lite)
 add_test(NAME error_tests COMMAND test_error)
+
+add_executable(test_span tests/test_span.cpp)
+target_link_libraries(test_span infra-lite)
+add_test(NAME span_tests COMMAND test_span)
