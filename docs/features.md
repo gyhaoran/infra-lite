@@ -69,4 +69,19 @@
 
 ---
 
+## Testing
+
+所有模块都有对应的单元测试：
+
+- `test_calculator` — 计算器示例
+- `test_combinators` — 组合器测试
+- `test_string_utils` — 字符串工具测试
+- `test_error` — 错误模块测试
+- `test_span` — span 测试
+- `test_logging` — 日志模块测试
+
+运行：`ctest`
+
+---
+
 See [docs/positioning.md](docs/positioning.md) for project scope.
