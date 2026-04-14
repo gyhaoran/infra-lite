@@ -4,6 +4,13 @@
 
 ---
 
+## Error Model
+
+- `infra::Error` — 错误类型，支持 None, UnexpectedChar, UnexpectedEnd, Custom
+- `Result<T>` — Result 类型，支持 map/and_then
+
+---
+
 ## Parser Combinators
 
 ### Repetition
@@ -40,12 +47,25 @@
 - `starts_with/ends_with` — 前缀/后缀检查
 - `find_char(s, c)` — 查找字符
 - `skip_word(s)` — 跳过单词
+- `strcmp_view(a, b)` — 字符串比较
+- `strcasecmp_view(a, b)` — 不区分大小写比较
 
 ---
 
-## Error Model
+## Memory Utilities
 
-使用 `infra::Error` 和 `Result<T>` 提供统一错误处理。
+### span<T>
+- 非拥有内存视图，零分配
+- `data()`, `size()`, `begin()`, `end()`
+- `subspan()`, `first()`, `last()`
+
+---
+
+## Logging
+
+- 编译时开关 `INFRA_LOG_ENABLED`
+- 零开销（未启用时为空操作）
+- `INFRA_LOG_INFO()`, `INFRA_LOG_WARN()`, `INFRA_LOG_ERROR()`
 
 ---
 
