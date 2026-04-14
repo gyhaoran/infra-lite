@@ -9,6 +9,14 @@ namespace infra::util {
 // String View Utilities (zero-allocation)
 // ============================================================================
 
+/// Get length of null-terminated string.
+/// @return String length (excluding null terminator).
+inline constexpr size_t strlen(const char* s) {
+    size_t len = 0;
+    while (s[len]) { ++len; }
+    return len;
+}
+
 /// Trim leading whitespace.
 /// @return Pointer to first non-whitespace char, or end of string.
 inline const char* ltrim(const char* s) {
@@ -74,6 +82,36 @@ inline const char* skip_word(const char* s) {
         ++s;
     }
     return s;
+}
+
+/// Compare two strings (case-sensitive).
+inline int strcmp_view(const char* a, const char* b) {
+    while (*a && *b) {
+        if (*a != *b) {
+            return *a < *b ? -1 : 1;
+        }
+        ++a; ++b;
+    }
+    if (*a) return 1;
+    if (*b) return -1;
+    return 0;
+}
+
+/// Compare two strings (case-insensitive).
+inline int strcasecmp_view(const char* a, const char* b) {
+    while (*a && *b) {
+        char ca = *a;
+        char cb = *b;
+        if (ca >= 'A' && ca <= 'Z') ca += 32;
+        if (cb >= 'A' && cb <= 'Z') cb += 32;
+        if (ca != cb) {
+            return ca < cb ? -1 : 1;
+        }
+        ++a; ++b;
+    }
+    if (*a) return 1;
+    if (*b) return -1;
+    return 0;
 }
 
 } // namespace infra::util
