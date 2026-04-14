@@ -119,4 +119,38 @@ inline ParseResult<T> choice3(const char* s, Parser<T> p1, Parser<T> p2, Parser<
     return p3(s);
 }
 
+// ============================================================================
+// Sequence Combinators
+// ============================================================================
+
+/// sequence2(p1, p2) - Run two parsers in sequence, return pair of results.
+/// Fails if either parser fails.
+template<typename T1, typename T2>
+inline ParseResult<std::pair<T1, T2>> sequence2(const char* s, Parser<T1> p1, Parser<T2> p2) {
+    auto r1 = p1(s);
+    if (!r1.ok()) {
+        return ParseResult<std::pair<T1, T2>>::error_at(s, r1.error);
+    }
+    auto r2 = p2(r1.next);
+    if (!r2.ok()) {
+        return ParseResult<std::pair<T1, T2>>::error_at(r1.next, r2.error);
+    }
+    return ParseResult<std::pair<T1, T2>>::success({std::move(r1.value), std::move(r2.value)}, r2.next);
+}
+
+/// then(p, f) - Run parser p, then apply function f to result.
+/// Useful for transforming parsed values.
+/// 
+/// Example: parse number then apply double
+///   auto doubled = then(parse_number, [](int n) { return n * 2; });
+template<typename T, typename F>
+inline auto then(const char* s, Parser<T> p, F&& f) 
+    -> ParseResult<std::invoke_result_t<F, T>> {
+    auto r = p(s);
+    if (!r.ok()) {
+        return ParseResult<std::invoke_result_t<F, T>>::error_at(s, r.error);
+    }
+    return ParseResult<std::invoke_result_t<F, T>>::success(f(std::move(r.value)), r.next);
+}
+
 } // namespace infra::parsing
