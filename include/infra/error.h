@@ -229,7 +229,7 @@ public:
         if (ok()) {
             return std::forward<F>(f)();
         }
-        return error_;
+        return Result<void>(error_);
     }
 };
 
@@ -250,13 +250,15 @@ template<typename T>
 }
 
 /// Create an error Result.
-[[nodiscard]] constexpr Result<void> make_error(Error e) noexcept {
-    return Result<void>(e);
+template<typename T>
+[[nodiscard]] constexpr Result<T> make_error(Error e) noexcept {
+    return Result<T>(e);
 }
 
 /// Create an error Result with custom message.
-[[nodiscard]] constexpr Result<void> make_error(const char* msg) noexcept {
-    return Result<void>(Error{Error::Custom, msg});
+template<typename T>
+[[nodiscard]] constexpr Result<T> make_error(const char* msg) noexcept {
+    return Result<T>(Error{Error::Custom, msg});
 }
 
 } // namespace infra
