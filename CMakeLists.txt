@@ -44,3 +44,7 @@ add_test(NAME combinator_tests COMMAND test_combinators)
 add_executable(test_string_utils tests/test_string_utils.cpp)
 target_link_libraries(test_string_utils infra-lite)
 add_test(NAME string_utils_tests COMMAND test_string_utils)
+
+add_executable(test_error tests/test_error.cpp)
+target_link_libraries(test_error infra-lite)
+add_test(NAME error_tests COMMAND test_error)
