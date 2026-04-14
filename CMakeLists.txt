@@ -36,3 +36,7 @@ target_include_directories(test_calculator PRIVATE
 )
 
 add_test(NAME calculator_tests COMMAND test_calculator)
+
+add_executable(test_combinators tests/test_combinators.cpp)
+target_link_libraries(test_combinators infra-lite)
+add_test(NAME combinator_tests COMMAND test_combinators)
