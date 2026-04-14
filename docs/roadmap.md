@@ -65,60 +65,36 @@
 
 ---
 
-## Phase 3: Stabilize Parsing API 🔄 (Current)
+## Phase 3: Stabilize Parsing API ✅ (Completed)
 
 **Goal**: Ensure parsing API is stable and well-documented.
 
-### Current Tasks
+### Completed Tasks
 
-- [ ] API review: Identify any inconsistencies
-- [ ] Add more combinators (many, choice, sequence)
-- [ ] Document parser contract in code
-- [ ] Add usage examples for each combinator
-- [ ] Performance benchmarking (optional)
-
-### Why Now?
-
-The error model refactor provides an opportunity to:
-1. Review API design while changes are fresh
-2. Ensure backward compatibility before external adoption
-3. Document lessons learned
+- [x] API review: Identify any inconsistencies
+- [x] Add more combinators (many, many1, choice, choice3, sequence2, then, skip, sep_by, between)
+- [x] Add parser factory functions (char_p, char_if, one_of, none_of)
+- [x] Document parser contract in code
+- [x] Add string utilities (ltrim, rtrim, starts_with, ends_with, find_char, skip_word)
+- [x] Update features.md with all combinators
 
 ### Deliverables
 
-- Stable parsing API with backward compatibility guarantees
-- Usage documentation for all combinators
-- Performance characteristics documented
+- ✅ Stable parsing API with all combinators
+- ✅ Usage documentation for all combinators
+- ✅ Parser contract well-documented in parser.h
 
 ---
 
-## Phase 4: Minimal Utilities (Planned)
+## Phase 4: Minimal Utilities 🔄 (Current)
 
 **Goal**: Add small, zero-dependency utilities that complement parsing.
 
-### Candidate Features
+### Current Tasks
 
-1. **Span-like type** (contiguous memory view without ownership)
-   - Zero allocation
-   - Bounds checking (debug mode)
-   - Compatible with existing APIs
-
-2. **String view helpers**
-   - Trim, split, strip operations
-   - Zero allocation
-   - Constexpr where possible
-
-3. **Optional logging** (compile-time selectable)
-   - Minimal footprint
-   - No runtime overhead when disabled
-   - Simple API
-
-### Constraints
-
-- Must not duplicate STL
-- Must be small and composable
-- Must have zero external dependencies
-- Must be header-only
+- [ ] Span-like type (contiguous memory view)
+- [ ] Optional logging (compile-time selectable)
+- [ ] Performance benchmark
 
 ---
 
