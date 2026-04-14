@@ -9,6 +9,7 @@ using infra::util::skip_ws;
 
 namespace infra::parsing {
 
+/// chain_left: left-associative operator chaining (e.g., a - b - c = (a - b) - c)
 template<typename T>
 ParseResult<T> chain_left(
     const char* s,
@@ -35,12 +36,13 @@ ParseResult<T> chain_left(
         }
 
         T value = apply(op, left.value, right.value);
-        left = { value, right.next, ParseError::None };
+        left = ParseResult<T>::success(value, right.next);
     }
 
     return left;
 }
 
+/// chain_right: right-associative operator chaining (e.g., a ^ b ^ c = a ^ (b ^ c))
 template<typename T>
 ParseResult<T> chain_right(
     const char* s,
@@ -66,7 +68,7 @@ ParseResult<T> chain_right(
     }
 
     T value = apply(left.value, right.value);
-    return { value, right.next, ParseError::None };
+    return ParseResult<T>::success(value, right.next);
 }
 
 } // namespace infra::parsing
