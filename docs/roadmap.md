@@ -86,15 +86,35 @@
 
 ---
 
-## Phase 4: Minimal Utilities 🔄 (Current)
+## Phase 4: Minimal Utilities ✅ (Completed)
 
 **Goal**: Add small, zero-dependency utilities that complement parsing.
 
-### Current Tasks
+### Completed Tasks
 
-- [ ] Span-like type (contiguous memory view)
-- [ ] Optional logging (compile-time selectable)
+- [x] Span-like type (span<T> with iterator support)
+- [x] String utilities (ltrim, rtrim, strcmp_view, etc.)
+- [x] Optional logging (compile-time selectable via INFRA_LOG_ENABLED)
+- [x] Common parser helpers (spaces, identifier, integer)
+
+### Metrics
+
+- ✅ Zero heap allocation in all utility modules
+- ✅ C++17 compatible
+- ✅ All tests pass
+
+---
+
+## Phase 5: Polish & Stabilize (Planned)
+
+**Goal**: Finalize API and prepare for v1.0.
+
+### Planned Tasks
+
+- [ ] API consistency review
+- [ ] Add more tests
 - [ ] Performance benchmark
+- [ ] Release preparation
 
 ---
 
