@@ -60,6 +60,12 @@ public:
         return span<const T>(data_ + (size_ - count), count);
     }
 
+    // Iterator support
+    constexpr T* begin() const noexcept { return data_; }
+    constexpr T* end() const noexcept { return data_ + size_; }
+    constexpr const T* cbegin() const noexcept { return data_; }
+    constexpr const T* cend() const noexcept { return data_ + size_; }
+
 private:
     T* data_;
     size_t size_;
