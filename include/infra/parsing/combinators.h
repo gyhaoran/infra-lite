@@ -89,4 +89,34 @@ inline ParseResult<std::vector<T>> many1(const char* s, Parser<T> parser) {
     return ParseResult<std::vector<T>>::success(std::move(results), pos);
 }
 
+// ============================================================================
+// Choice Combinators
+// ============================================================================
+
+/// choice(p1, p2) - Try two parsers, return first success.
+/// Returns first error if both fail.
+template<typename T>
+inline ParseResult<T> choice(const char* s, Parser<T> p1, Parser<T> p2) {
+    auto r1 = p1(s);
+    if (r1.ok()) {
+        return r1;
+    }
+    auto r2 = p2(s);
+    if (r2.ok()) {
+        return r2;
+    }
+    // Both failed, return first error
+    return ParseResult<T>::error_at(s, r1.error);
+}
+
+/// choice3(p1, p2, p3) - Try three parsers, return first success.
+template<typename T>
+inline ParseResult<T> choice3(const char* s, Parser<T> p1, Parser<T> p2, Parser<T> p3) {
+    auto r = choice(s, p1, p2);
+    if (r.ok()) {
+        return r;
+    }
+    return p3(s);
+}
+
 } // namespace infra::parsing
