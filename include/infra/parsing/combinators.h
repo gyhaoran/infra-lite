@@ -153,4 +153,75 @@ inline auto then(const char* s, Parser<T> p, F&& f)
     return ParseResult<std::invoke_result_t<F, T>>::success(f(std::move(r.value)), r.next);
 }
 
+// ============================================================================
+// Utility Combinators
+// ============================================================================
+
+/// skip(p) - Run parser, discard result, return original position.
+/// Useful for consuming delimiters without producing values.
+template<typename T>
+inline ParseResult<const char*> skip(const char* s, Parser<T> p) {
+    auto r = p(s);
+    if (!r.ok()) {
+        return ParseResult<const char*>::error_at(s, r.error);
+    }
+    return ParseResult<const char*>::success(s, r.next);
+}
+
+/// sep_by(item, sep) - Parse zero or more items separated by sep.
+/// Returns vector of parsed items.
+/// 
+/// Example: parse comma-separated numbers
+///   auto nums = sep_by(parse_number, char_p(','));
+template<typename T>
+inline ParseResult<std::vector<T>> sep_by(const char* s, Parser<T> item, Parser<char> sep) {
+    std::vector<T> results;
+
+    // Try first item
+    auto first = item(s);
+    if (!first.ok()) {
+        // Zero items is valid
+        return ParseResult<std::vector<T>>::success(std::move(results), s);
+    }
+    results.push_back(std::move(first.value));
+    const char* pos = first.next;
+
+    // Parse remaining items with separators
+    while (true) {
+        auto s_result = sep(pos);
+        if (!s_result.ok()) {
+            break;
+        }
+        auto item_result = item(s_result.next);
+        if (!item_result.ok()) {
+            break;
+        }
+        results.push_back(std::move(item_result.value));
+        pos = item_result.next;
+    }
+
+    return ParseResult<std::vector<T>>::success(std::move(results), pos);
+}
+
+/// between(open, content, close) - Parse content between open and close delimiters.
+/// 
+/// Example: parse content in parentheses
+///   auto parens = between(char_p('('), parse_expr, char_p(')'));
+template<typename T, typename U, typename V>
+inline ParseResult<U> between(const char* s, Parser<T> p_open, Parser<U> p_content, Parser<V> p_close) {
+    auto r_open = p_open(s);
+    if (!r_open.ok()) {
+        return ParseResult<U>::error_at(s, r_open.error);
+    }
+    auto r_content = p_content(r_open.next);
+    if (!r_content.ok()) {
+        return ParseResult<U>::error_at(r_open.next, r_content.error);
+    }
+    auto r_close = p_close(r_content.next);
+    if (!r_close.ok()) {
+        return ParseResult<U>::error_at(r_content.next, r_close.error);
+    }
+    return ParseResult<U>::success(std::move(r_content.value), r_close.next);
+}
+
 } // namespace infra::parsing
