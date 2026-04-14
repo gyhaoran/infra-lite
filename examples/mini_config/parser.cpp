@@ -26,7 +26,7 @@ ParseResult<std::string> parse_ident(const char* s) {
         p = c.next;
     }
 
-    return { out, p, ParseError::None };
+    return ParseResult<std::string>::success(out, p);
 }
 
 ParseResult<int> parse_int(const char* s) {
@@ -37,7 +37,7 @@ ParseResult<int> parse_int(const char* s) {
 
     auto d = satisfy(p, ::isdigit);
     if (!d.ok()) {
-        return ParseResult<int>::error_at(s, ParseError::UnexpectedChar);
+        return ParseResult<int>::unexpected_char(s);
     }
 
     while (true) {
@@ -47,14 +47,13 @@ ParseResult<int> parse_int(const char* s) {
         p = r.next;
     }
 
-    return { v, p, ParseError::None };
+    return ParseResult<int>::success(v, p);
 }
-
 
 ParseResult<std::string> parse_string(const char* s) {
     s = skip_ws(s);
 
-    auto open = expect_char(s, '"');
+    auto open = expect_char(s, '\"');
     if (!open.ok()) {
         return ParseResult<std::string>::error_at(open.next, open.error);
     }
@@ -64,11 +63,11 @@ ParseResult<std::string> parse_string(const char* s) {
 
     while (true) {
         if (*p == '\0') {
-            return ParseResult<std::string>::error_at(p, ParseError::UnexpectedEnd);
+            return ParseResult<std::string>::unexpected_end(p);
         }
 
-        if (*p == '"') {
-            return { out, p + 1, ParseError::None };
+        if (*p == '\"') {
+            return ParseResult<std::string>::success(out, p + 1);
         }
 
         auto c = any_char(p);
@@ -82,17 +81,17 @@ ParseResult<ConfigItem> parse_value(const char* s, ConfigItem item) {
     if (iv.ok()) {
         item.type = ConfigItem::ValueType::Int;
         item.int_value = iv.value;
-        return { item, iv.next, ParseError::None };
+        return ParseResult<ConfigItem>::success(item, iv.next);
     }
 
     auto sv = parse_string(s);
     if (sv.ok()) {
         item.type = ConfigItem::ValueType::String;
         item.str_value = sv.value;
-        return { item, sv.next, ParseError::None };
+        return ParseResult<ConfigItem>::success(item, sv.next);
     }
 
-    return ParseResult<ConfigItem>::error_at(s, ParseError::UnexpectedChar);
+    return ParseResult<ConfigItem>::unexpected_char(s);
 }
 
 ParseResult<ConfigItem> parse_stmt(const char* s) {
@@ -107,7 +106,7 @@ ParseResult<ConfigItem> parse_stmt(const char* s) {
     auto eq = expect_char(p, '=');
     if (!eq.ok()) {
         // key-only statement is allowed
-        return { item, key.next, ParseError::None };
+        return ParseResult<ConfigItem>::success(item, key.next);
     }
 
     return parse_value(eq.next, item);
@@ -132,5 +131,5 @@ ParseResult<Config> parse_config(const char* s) {
         p = stmt.next;
     }
 
-    return { cfg, p, ParseError::None };
+    return ParseResult<Config>::success(cfg, p);
 }

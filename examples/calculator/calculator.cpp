@@ -41,10 +41,10 @@ ParseResult<int> parse_number(const char* s) {
     int matched = sscanf(s, "%d%n", &v, &len);
 
     if (matched != 1) {
-        return ParseResult<int>::error_at(s, ParseError::UnexpectedChar);
+        return ParseResult<int>::unexpected_char(s);
     }
 
-    return { v, s + len, ParseError::None };
+    return ParseResult<int>::success(v, s + len);
 }
 
 ParseResult<int> parse_group(const char* s) {
@@ -61,7 +61,7 @@ ParseResult<int> parse_group(const char* s) {
         if (!close.ok()) { 
             return ParseResult<int>::error_at(close.next, close.error);
         }
-        return { inner.value, close.next, ParseError::None };
+        return ParseResult<int>::success(inner.value, close.next);
     }
 
     return parse_number(s);
@@ -78,7 +78,7 @@ ParseResult<int> parse_unary(const char* s) {
 
         return (*s == '+')
             ? inner
-            : ParseResult<int>{ -inner.value, inner.next, ParseError::None };
+            : ParseResult<int>::success(-inner.value, inner.next);
     }
 
     return parse_group(s);

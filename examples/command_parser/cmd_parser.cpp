@@ -13,14 +13,14 @@ ParseResult<std::string> parse_ident(const char* s) {
 
     const char* p = s;
     if (!std::isalpha(*p) && *p != '_') {
-        return ParseResult<std::string>::error_at(p, ParseError::UnexpectedChar);
+        return ParseResult<std::string>::unexpected_char(p);
     }
 
     while (std::isalnum(*p) || *p == '_') {
         ++p;
     }
 
-    return { std::string(s, p), p, ParseError::None };
+    return ParseResult<std::string>::success(std::string(s, p), p);
 }
 
 ParseResult<int> parse_int(const char* s) {
@@ -30,7 +30,7 @@ ParseResult<int> parse_int(const char* s) {
     const char* p = s;
 
     if (!std::isdigit(*p)) {
-        return ParseResult<int>::error_at(p, ParseError::UnexpectedChar);
+        return ParseResult<int>::unexpected_char(p);
     }
 
     while (std::isdigit(*p)) {
@@ -38,7 +38,7 @@ ParseResult<int> parse_int(const char* s) {
         ++p;
     }
 
-    return { value, p, ParseError::None };
+    return ParseResult<int>::success(value, p);
 }
 
 ParseResult<Arg> parse_flag(const char* s) {
@@ -57,7 +57,7 @@ ParseResult<Arg> parse_flag(const char* s) {
     arg.kind = Arg::Kind::Flag;
     arg.key = name.value;
 
-    return { arg, name.next, ParseError::None };
+    return ParseResult<Arg>::success(arg, name.next);
 }
 
 ParseResult<Arg> parse_kv(const char* s) {
@@ -78,7 +78,7 @@ ParseResult<Arg> parse_kv(const char* s) {
     arg.key = name.value;
     arg.int_value = int_val.value;
 
-    return { arg, int_val.next, ParseError::None };
+    return ParseResult<Arg>::success(arg, int_val.next);
 }
 
 ParseResult<Arg> parse_ident_arg(const char* s) {
@@ -89,7 +89,7 @@ ParseResult<Arg> parse_ident_arg(const char* s) {
     arg.kind = Arg::Kind::Ident;
     arg.key = id.value;
 
-    return { arg, id.next, ParseError::None };
+    return ParseResult<Arg>::success(arg, id.next);
 }
 
 ParseResult<Arg> parse_arg(const char* s) {
@@ -113,7 +113,7 @@ ParseResult<Arg> parse_arg(const char* s) {
         return ident;
     }
 
-    return ParseResult<Arg>::error_at(s, ParseError::UnexpectedChar);
+    return ParseResult<Arg>::unexpected_char(s);
 }
 
 ParseResult<Command> parse_command(const char* s) {
@@ -135,5 +135,5 @@ ParseResult<Command> parse_command(const char* s) {
         p = arg.next;
     }
 
-    return { cmd, p, ParseError::None };
+    return ParseResult<Command>::success(cmd, p);
 }

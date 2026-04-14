@@ -2,6 +2,8 @@
 
 #include <type_traits>
 #include <cassert>
+#include <utility>
+#include <functional>
 
 namespace infra {
 
@@ -33,7 +35,7 @@ struct Error {
 /// Convenience constructors for common error types.
 [[nodiscard]] constexpr Error none() noexcept { return Error{}; }
 
-[[nodiscard]] constexpr Error unexpected_char(char expected, char actual) noexcept {
+[[nodiscard]] constexpr Error unexpected_char(char, char) noexcept {
     return Error{Error::UnexpectedChar, nullptr};
 }
 
@@ -42,7 +44,7 @@ struct Error {
 }
 
 // ============================================================================
-// Result Type (monad-like)
+// Result Type (monad-like, C++17 compatible)
 // ============================================================================
 
 /// Result type for fallible operations.
@@ -55,7 +57,7 @@ struct Error {
 ///
 ///   auto r = divide(10, 2);
 ///   if (r) { use(*r); }
-///   else { handle_error(r.error()); }
+///else { handle_error(r.error()); }
 ///
 /// @tparam T Value type (must be nothrow-move-constructible for optimal usage)
 template<typename T>
@@ -74,16 +76,14 @@ private:
 
 public:
     // Construction from value
-    constexpr Result(T v) noexcept(std::is_nothrow_move_constructible_v<T>)
+    template<typename U = T, typename = std::enable_if_t<!std::is_same_v<U, void>>>
+    constexpr Result(U&& v) noexcept(std::is_nothrow_move_constructible_v<T>)
         : storage_(), has_value_(true) {
         new (&storage_.value) T(std::move(v));
     }
 
     // Construction from error
     constexpr Result(Error e) noexcept : storage_(), has_value_(false), error_(e) {}
-
-    // Default for void specialization
-    constexpr Result() noexcept requires std::is_void_v<T> : storage_(), has_value_(true), error_() {}
 
     // Destructor
     ~Result() noexcept {
@@ -100,9 +100,9 @@ public:
         }
     }
 
-    // Copy constructor
-    Result(const Result& other) requires std::is_copy_constructible_v<T>
-        : has_value_(other.has_value_), error_(other.error_) {
+    // Copy constructor (only if T is copyable)
+    template<typename U = T, typename = std::enable_if_t<std::is_copy_constructible_v<U>>>
+    Result(const Result& other) : has_value_(other.has_value_), error_(other.error_) {
         if (has_value_) {
             new (&storage_.value) T(other.storage_.value);
         }
@@ -123,8 +123,9 @@ public:
         return *this;
     }
 
-    // Copy assignment
-    Result& operator=(const Result& other) requires std::is_copy_assignable_v<T> {
+    // Copy assignment (only if T is copyable)
+    template<typename U = T, typename = std::enable_if_t<std::is_copy_assignable_v<U>>>
+    Result& operator=(const Result& other) {
         if (this != &other) {
             if (has_value_) {
                 storage_.value.~T();
@@ -180,7 +181,8 @@ public:
 
     // map: transform the value if present
     template<typename F>
-    [[nodiscard]] auto map(F&& f) const noexcept -> Result<std::invoke_result_t<F, T>> {
+    [[nodiscard]] auto map(F&& f) const noexcept 
+        -> Result<std::invoke_result_t<F, T>> {
         using U = std::invoke_result_t<F, T>;
         if (ok()) {
             return Result<U>(std::forward<F>(f)(storage_.value));
