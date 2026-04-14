@@ -39,4 +39,57 @@ inline ParseResult<char> satisfy(const char* s, Pred pred) {
     return ParseResult<char>::success(*s, s + 1);
 }
 
+// ============================================================================
+// Parser Factory Functions
+// ============================================================================
+
+/// char_p(c) - Create parser that matches exactly character c.
+/// Usage: auto parser = char_p('+');
+inline auto char_p(char expected) {
+    return [expected](const char* s) noexcept -> ParseResult<char> {
+        return expect_char(s, expected);
+    };
+}
+
+/// char_if(pred) - Create parser that matches if predicate returns true.
+/// Usage: auto digit = char_if(::isdigit);
+template<typename Pred>
+inline auto char_if(Pred pred) {
+    return [pred](const char* s) noexcept -> ParseResult<char> {
+        return satisfy(s, pred);
+    };
+}
+
+/// one_of(chars) - Create parser that matches any char in string.
+/// Usage: auto op = one_of("+-*/");
+inline auto one_of(const char* chars) {
+    return [=](const char* s) noexcept -> ParseResult<char> {
+        if (*s == '\0') {
+            return ParseResult<char>::unexpected_end(s);
+        }
+        for (const char* p = chars; *p; ++p) {
+            if (*s == *p) {
+                return ParseResult<char>::success(*s, s + 1);
+            }
+        }
+        return ParseResult<char>::unexpected_char(s);
+    };
+}
+
+/// none_of(chars) - Create parser that matches any char NOT in string.
+/// Usage: auto ident_char = none_of(" \t\n");
+inline auto none_of(const char* chars) {
+    return [=](const char* s) noexcept -> ParseResult<char> {
+        if (*s == '\0') {
+            return ParseResult<char>::unexpected_end(s);
+        }
+        for (const char* p = chars; *p; ++p) {
+            if (*s == *p) {
+                return ParseResult<char>::unexpected_char(s);
+            }
+        }
+        return ParseResult<char>::success(*s, s + 1);
+    };
+}
+
 } // namespace infra::parsing
