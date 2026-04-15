@@ -7,7 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.1.0] - 2026-04-15
+## [1.0.0] - 2026-04-15
+
+### Changed
+
+- **Breaking**: Version bump to 1.0.0 - API now considered stable
+
+### Added
+
+#### Error Model
 
 ### Added
 
@@ -65,5 +73,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Unit tests for all modules
 - 6 test suites with 100% pass rate
 
-[Unreleased]: https://github.com/gyhaoran/infra-lite/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/gyhaoran/infra-lite/releases/tag/v0.1.0
+[Unreleased]: https://github.com/gyhaoran/infra-lite/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/gyhaoran/infra-lite/releases/tag/v1.0.0

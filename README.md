@@ -3,6 +3,7 @@
 **A lightweight, embeddable C/C++ infrastructure library.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Version](https://img.shields.io/badge/Version-1.0.0-green.svg)](CHANGELOG.md)
 
 ---
 
