@@ -30,6 +30,11 @@ ParseResult<char> parse_plus(const char* s) {
     return expect_char(s, '+');
 }
 
+// Free function parser for ','
+ParseResult<char> parse_comma(const char* s) {
+    return expect_char(s, ',');
+}
+
 int main() {
     std::cout << "Running combinator tests...\n";
 
@@ -60,6 +65,36 @@ int main() {
     auto r5 = optional("xyz", parse_a);
     assert(r5.ok());
     std::cout << "  optional: OK (returned default on failure)\n";
+
+    // Test sequence2
+    auto r6 = sequence2("ab", parse_a, parse_b);
+    assert(r6.ok());
+    assert(r6.value.first == 'a');
+    assert(r6.value.second == 'b');
+    std::cout << "  sequence2: OK (parsed 'a' and 'b')\n";
+
+    // Test sequence2 failure
+    auto r7 = sequence2("ac", parse_a, parse_b);
+    assert(!r7.ok());
+    std::cout << "  sequence2: OK (failed on wrong second char)\n";
+
+    // Test sep_by - comma separated digits
+    auto r8 = sep_by("1,2,3", parse_digit, parse_comma);
+    assert(r8.ok());
+    assert(r8.value.size() == 3);
+    std::cout << "  sep_by: OK (parsed 3 digits)\n";
+
+    // Test sep_by empty
+    auto r9 = sep_by("abc", parse_digit, parse_plus);
+    assert(r9.ok());
+    assert(r9.value.empty());
+    std::cout << "  sep_by: OK (empty on no match)\n";
+
+    // Test lookahead - should not consume input
+    auto r10 = lookahead("abc", parse_a);
+    assert(r10.ok());
+    assert(r10.value == 'a');
+    std::cout << "  lookahead: OK (did not consume input)\n";
 
     std::cout << "All combinator tests passed!\n";
     return 0;
