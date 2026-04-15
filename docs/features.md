@@ -14,29 +14,29 @@
 ## Parser Combinators
 
 ### Repetition
-- `many(p)` — 匹配零个或多个
-- `many1(p)` — 匹配一个或多个
+- `many(s, p)` — 匹配零个或多个（输入，解析器）
+- `many1(s, p)` — 匹配一个或多个
 
 ### Choice
-- `choice(p1, p2)` — 返回第一个成功
-- `choice3(p1, p2, p3)` — 尝试三个解析器
+- `choice(s, p1, p2)` — 返回第一个成功
+- `choice3(s, p1, p2, p3)` — 尝试三个解析器
 
 ### Sequence
-- `sequence2(p1, p2)` — 顺序执行，返回 pair
-- `then(p, f)` — 解析后转换结果
+- `sequence2(s, p1, p2)` — 顺序执行，返回 pair
+- `then(s, p, f)` — 解析后转换结果
 
 ### Utility
-- `optional(p)` — 失败时返回默认值
-- `lookahead(p)` — 不消费输入
-- `skip(p)` — 丢弃结果
-- `sep_by(item, sep)` — 解析分隔列表
-- `between(open, content, close)` — 解析包围内容
+- `optional(s, p)` — 失败时返回默认值
+- `lookahead(s, p)` — 不消费输入
+- `skip(s, p)` — 丢弃结果
+- `sep_by(s, item, sep)` — 解析分隔列表
+- `between(s, open, content, close)` — 解析包围内容
 
 ### Factory Functions
-- `char_p(c)` — 匹配精确字符
-- `char_if(pred)` — 满足谓词
-- `one_of(chars)` — 匹配集合中字符
-- `none_of(chars)` — 匹配集合外字符
+- `char_p(c)` — 创建匹配精确字符的解析器
+- `char_if(pred)` — 创建满足谓词的解析器
+- `one_of(chars)` — 创建匹配集合中字符的解析器
+- `none_of(chars)` — 创建匹配集合外字符的解析器
 
 ---
 
