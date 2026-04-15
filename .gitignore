@@ -7,3 +7,5 @@ mybuild
 *.o
 *.log
 *.tmp
+
+.minimax

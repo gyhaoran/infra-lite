@@ -114,25 +114,35 @@ ctest
 ```
 include/
 ├── infra/
-│   ├── error.h          # (Planned) Unified error model
+│   ├── error.h          # Unified error model (infra::Error, Result<T>)
+│   ├── logging.h       # Compile-time logging (INFRA_LOG_ENABLED)
 │   ├── parsing/
 │   │   ├── parser.h     # Parser contract
-│   │   ├── primitives.h # Basic parsers
-│   │   ├── combinators.h# Combinators
-│   │   ├── chain.h      # Operator chaining
-│   │   └── result.h     # Parse result
+│   │   ├── primitives.h # char_p, char_if, one_of, none_of
+│   │   ├── combinators.h# many, choice, sequence, skip, sep_by, between
+│   │   ├── helpers.h   # spaces, identifier, integer
+│   │   ├── chain.h     # Operator chaining
+│   │   └── result.h    # Parse result (uses infra::Error)
 │   └── util/
+│       ├── span.h      # Non-owning memory view
+│       ├── string_utils.h# ltrim, strcmp_view, etc.
 │       └── char_stream.h# Input utilities
 docs/
 ├── features.md          # Current capabilities
-├── positioning.md       # Project positioning
+├── positioning.md        # Project positioning
 ├── roadmap.md           # Development plan
 └── parsing_framework_guide.md
 examples/
 ├── calculator.cpp       # Expression evaluator
-└── cmd_parser.cpp       # CLI argument parser
+├── cmd_parser.cpp       # CLI argument parser
+├── mini_config/         # Config file parser
+└── error_example/       # Error handling examples
 tests/
-└── ...
+├── test_combinators.cpp
+├── test_string_utils.cpp
+├── test_error.cpp
+├── test_span.cpp
+└── test_logging.cpp
 ```
 
 ---
