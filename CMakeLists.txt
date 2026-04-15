@@ -56,3 +56,8 @@ add_test(NAME span_tests COMMAND test_span)
 add_executable(test_logging tests/test_logging.cpp)
 target_link_libraries(test_logging infra-lite)
 add_test(NAME logging_tests COMMAND test_logging)
+
+# Benchmark
+file(GLOB_RECURSE ExampleBenchmarkSources examples/benchmark/*.cpp)
+add_executable(benchmark ${ExampleBenchmarkSources})
+target_link_libraries(benchmark infra-lite)
