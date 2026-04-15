@@ -15,8 +15,8 @@ namespace infra::logging {
 // - Simple API, no external dependencies
 //
 // Usage:
-//   INFRA_LOG_INFO("Hello {}", "world");
-//   INFRA_LOG_ERROR("Failed with code {}", 42);
+//   INFRA_LOG_INFO("Hello world");
+//   INFRA_LOG_ERROR("Failed with code 42");
 //
 // Enable logging by defining INFRA_LOG_ENABLED before including.
 // ============================================================================
