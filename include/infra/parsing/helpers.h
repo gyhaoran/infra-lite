@@ -1,5 +1,8 @@
 #pragma once
 
+#include <string>
+#include <cctype>
+
 #include "infra/parsing/combinators.h"
 #include "infra/parsing/primitives.h"
 #include "infra/util/string_utils.h"
@@ -23,10 +26,14 @@ inline auto skip_spaces = [](const char* s) -> ParseResult<const char*> {
 };
 
 /// Match one or more whitespace.
-inline auto spaces1 = many1(spaces);
+inline auto spaces1 = [](const char* s) {
+    return many1(s, spaces);
+};
 
 /// Match optional whitespace.
-inline auto opt_spaces = optional(spaces);
+inline auto opt_spaces = [](const char* s) {
+    return optional(s, spaces);
+};
 
 /// Match an identifier (alphanumeric + underscore, starting with letter).
 inline auto identifier = [](const char* s) -> ParseResult<std::string> {
