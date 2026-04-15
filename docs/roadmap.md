@@ -11,8 +11,9 @@
 |-------|----------|-------|--------|
 | Phase 1: Project Foundation | 2-3 weeks | Documentation, positioning, error model | ✅ Complete |
 | Phase 2: Unify Error Model | 2-3 weeks | infra::Error, Result<T>, parsing integration | ✅ Complete |
-| Phase 3: Stabilize Parsing API | 3-4 weeks | API review, backward compatibility, documentation | 🔄 Current |
+| Phase 3: Stabilize Parsing API | 3-4 weeks | API review, backward compatibility, documentation | ✅ Complete |
 | Phase 4: Minimal Utilities | 2-3 weeks | Small utilities (span-like, string_view helpers) | ✅ Complete |
+| Phase 5: Polish & Stabilize | 1-2 weeks | Performance, release prep, documentation | ✅ Complete |
 
 ---
 
