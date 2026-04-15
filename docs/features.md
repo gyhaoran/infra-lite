@@ -82,6 +82,22 @@
 
 运行：`ctest`
 
+## Performance
+
+性能基准测试（`examples/benchmark`）显示所有操作都在亚微秒级：
+
+| 模块 | 操作 | 性能 |
+|------|------|------|
+| Parsing | char_p | ~0.01 us/op |
+| Parsing | many/many1 | ~0.7 us/op |
+| String | ltrim/starts_with | ~0.01 us/op |
+| Span | iteration/subspan | ~0.01 us/op |
+
+关键特性：
+- 零堆分配
+- 零外部依赖
+- C++17 兼容
+
 ---
 
 See [docs/positioning.md](docs/positioning.md) for project scope.
