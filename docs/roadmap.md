@@ -1,7 +1,7 @@
 # infra-lite — Roadmap
 
 **Timeframe: 8-12 weeks**  
-**Last updated: 2026-04-14**
+**Last updated: 2026-04-15**
 
 ---
 
@@ -12,7 +12,7 @@
 | Phase 1: Project Foundation | 2-3 weeks | Documentation, positioning, error model | ✅ Complete |
 | Phase 2: Unify Error Model | 2-3 weeks | infra::Error, Result<T>, parsing integration | ✅ Complete |
 | Phase 3: Stabilize Parsing API | 3-4 weeks | API review, backward compatibility, documentation | 🔄 Current |
-| Phase 4: Minimal Utilities | 2-3 weeks | Small utilities (span-like, string_view helpers) | 📋 Planned |
+| Phase 4: Minimal Utilities | 2-3 weeks | Small utilities (span-like, string_view helpers) | ✅ Complete |
 
 ---
 
@@ -105,23 +105,24 @@
 
 ---
 
-## Phase 5: Polish & Stabilize 🔄 (Current)
+## Phase 5: Polish & Stabilize ✅ (Completed)
 
 **Goal**: Finalize API and prepare for v1.0.
 
-### Current Tasks
+### Completed Tasks
 
 - [x] API consistency review (combinators documented)
 - [x] Add more tests (combinator, string_utils, error tests)
-- [ ] Performance benchmark
-- [ ] Release preparation
+- [x] Performance benchmark
+- [x] Release documentation (CHANGELOG.md)
+- [x] Version header (version.h)
 
-### Completed Tasks
+### Deliverables
 
-- [x] Add combinator tests
-- [x] Add string_utils tests
-- [x] Add error module tests
-- Total: 4 test suites
+- ✅ Performance benchmark (sub-microsecond operations)
+- ✅ CHANGELOG.md following Keep a Changelog format
+- ✅ version.h with semantic versioning
+- Total: 6 test suites, all passing
 
 ---
 
@@ -158,9 +159,9 @@ Before adding any new capability, evaluate against:
 
 ### Current State
 
-- **v0.1.x**: Initial development phase
-- API subject to change
-- No backward compatibility guarantees yet
+- **v0.1.0**: Initial release ready
+- All phases complete
+- API stable for v0.1.x
 
 ### Target: v1.0
 
