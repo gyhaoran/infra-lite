@@ -74,19 +74,24 @@ See [docs/features.md](docs/features.md) for complete capability list.
 ```cpp
 #include "infra/parsing/parser.h"
 #include "infra/parsing/combinators.h"
+#include "infra/parsing/helpers.h"
 
 using namespace infra::parsing;
 
-// Simple parser: match one or more digits
-auto number = many1(char_p(isdigit));
-
-// Use it
+// Simple parser: match an integer (using helper)
 const char* input = "123abc";
-auto result = number(input);
+auto result = integer(input);
 if (result) {
-    // result.value() contains "123"
-    // result.end() points to "abc"
+    // result.value() contains 123
+    // result.next points to "abc"
 }
+
+// Or use combinators with a free-function parser
+ParseResult<char> parse_digit(const char* s) {
+    return satisfy(s, ::isdigit);
+}
+auto digits = many1("123abc", parse_digit);
+// digits.value() contains {'1', '2', '3'}
 ```
 
 ---
